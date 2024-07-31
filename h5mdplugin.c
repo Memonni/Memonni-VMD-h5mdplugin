@@ -52,6 +52,8 @@ const float default_charge= 0.0;
 const float default_radius= 0.5;
 const int default_atomicnumber= 1;
 
+const int default_string_size = 32 * sizeof(char);
+
 static void *open_h5md_read(const char *filename, const char *filetype, int *natoms){
 	h5md_hide_hdf5_error_messages();
 	struct h5md_file* file;
@@ -247,9 +249,9 @@ int read_h5md_structure_vmd_structure(void *_file, int *optflags,molfile_atom_t 
 		if(status_index_species==0 && status_read_species>=0)
 			index_of_species=find_index_of_species(data_index_species,data_species[i],len_data_index_species);
 		if(status_read_type==0 && status_index_species==0 &&index_of_species>=0)
-			strncpy(atom->type, data_type[index_of_species], 16*sizeof(char));	//set type for atom of species
+			strncpy(atom->type, data_type[index_of_species], default_string_size);	//set type for atom of species
 		else
-			strncpy(atom->type,default_type,16*sizeof(char));
+			strncpy(atom->type,default_type,default_string_size);
 		if(status_read_atomicnumber==0 && status_index_species==0 &&index_of_species>=0){	//set atomicnumber
 			if(data_atomicnumber[index_of_species]<112 ){
 					atom->atomicnumber = data_atomicnumber[index_of_species]; 	
@@ -266,10 +268,10 @@ int read_h5md_structure_vmd_structure(void *_file, int *optflags,molfile_atom_t 
 			}
 		}
 		if (status_read_name==0 && status_index_species==0 && index_of_species>=0){
-			strncpy(atom->name,data_name[index_of_species],16*sizeof(char));	//set elementname for atom of species
+			strncpy(atom->name,data_name[index_of_species],default_string_size);	//set elementname for atom of species
 		}
 		else{
-			strncpy(atom->name,element_symbols[atom->atomicnumber],16*sizeof(char));
+			strncpy(atom->name,element_symbols[atom->atomicnumber],default_string_size);
 		}
 		if(status_read_mass==0 && status_index_species==0 && index_of_species>=0)
 			atom->mass = data_mass[i];	//set mass for atom of with id i
